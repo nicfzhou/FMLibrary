@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
                         "自己开发过程中积累的常用库，自己编写，部分存在局限性"
                        DESC
 
-  s.homepage         = "https://github.com/<GITHUB_USERNAME>/FMLibrary"
+  s.homepage         = "https://github.com/nicfzhou/FMLibrary.git"
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license          = 'MIT'
   s.author           = { "nicfzhou" => "nicfzhou@gmail.com" }

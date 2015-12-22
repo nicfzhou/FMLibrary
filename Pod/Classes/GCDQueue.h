@@ -3,7 +3,7 @@
 //  SpeeedApp
 //
 //  Created by 周峰 on 15/11/19.
-//  Copyright © 2015年 ivtime. All rights reserved.
+//  Copyright © 2015年 Feng.Z. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
