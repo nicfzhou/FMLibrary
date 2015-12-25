@@ -7,7 +7,7 @@
 //
 
 #import "FMViewController.h"
-@import FMLibrary;
+#import "FMLibrary.h"
 
 @interface FMViewController ()
 
@@ -19,7 +19,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    
+    [FZToast makeToast:@""];
     
 }
 
