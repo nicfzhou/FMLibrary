@@ -11,3 +11,9 @@
 @interface NSObject (FMKVO)
 
 @end
+
+@interface NSObject (Property4Category)
+
+- (void) setProperty:(id) value forKey:(NSString *) key;
+- (id) propertyForKey:(NSString *) key;
+@end

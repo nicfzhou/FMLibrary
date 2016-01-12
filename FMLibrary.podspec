@@ -35,7 +35,32 @@ Pod::Spec.new do |s|
 #   'FMLibrary' => ['Pod/Assets/*.png']
 # }
 
+
+#子目录
+    s.subspec 'Category' do |category|
+        category.source_files = 'Pod/Classes/Category/**/*'
+        category.public_header_files = 'Pod/Classes/Category/**/*.h'
+        #category.resource = "Pod/Assets/MLSUIKitResource.bundle"
+        category.dependency 'FMLibrary/Private'
+    end
+
+    s.subspec 'Tool' do |tool|
+        tool.source_files = 'Pod/Classes/Tool/**/*'
+        tool.public_header_files = 'Pod/Classes/Tool/**/*.h'
+    end
+
+    s.subspec 'UITool' do |uitool|
+        uitool.source_files = 'Pod/Classes/UITool/**/*'
+        uitool.public_header_files = 'Pod/Classes/UITool/**/*.h'
+    end
+
+    s.subspec 'Private' do |private|
+        private.source_files = 'Pod/Classes/Private/**/*'
+        private.public_header_files = 'Pod/Classes/Private/**/*.h'
+    end
+
+
   s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
+  s.frameworks = 'UIKit', 'Accelerate'
   # s.dependency 'AFNetworking', '~> 2.3'
 end
