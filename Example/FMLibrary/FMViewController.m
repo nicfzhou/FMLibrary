@@ -7,7 +7,8 @@
 //
 
 #import "FMViewController.h"
-#import "FMLibrary.h"
+//#import "FMLibrary.h"
+@import FMLibrary;
 
 @interface FMViewController ()
 
@@ -20,6 +21,15 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     [FZToast makeToast:@""];
+    
+    self.view.backgroundColor = [UIColor darkGrayColor];
+    
+    [[GCDQueue mainQueue] execute:^{
+        [self.view enableBlurry:YES];
+        
+        [self.view addSubview:[UIButton buttonWithType:UIButtonTypeContactAdd]];
+    } afterDelay:1];
+    
     
 }
 
