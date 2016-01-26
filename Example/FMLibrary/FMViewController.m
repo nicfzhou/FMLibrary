@@ -20,16 +20,20 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    [FZToast makeToast:@""];
+
     
-    self.view.backgroundColor = [UIColor darkGrayColor];
+//    [FMPermission askPermissionOfType:PermissionTypePhoto complete:^(PermissionStatus status){
+//        NSLog(@"permission status = %ld",(long)status);
+//    }];
     
-    [[GCDQueue mainQueue] execute:^{
-        [self.view enableBlurry:YES];
-        
-        [self.view addSubview:[UIButton buttonWithType:UIButtonTypeContactAdd]];
-    } afterDelay:1];
+    [FMPermission askPermissionOfType:PermissionTypeLocationAlways complete:^(PermissionStatus status){
+        NSLog(@"permission status = %ld",(long)status);
+    }];
     
+    
+//    [FMPermission askPermissionOfType:PermissionTypeLocationAlways complete:^(PermissionStatus status){
+//        NSLog(@"permission status = %ld",(long)status);
+//    }];
     
 }
 
