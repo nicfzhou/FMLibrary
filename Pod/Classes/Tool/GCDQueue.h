@@ -8,6 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+
+/** 阻塞并等待queue执行结束，和 FM_BLOCK_QUEUE_END 必须成对出现，调用FM_BLOCK_QUEUE_NOTIFY时，返回到被阻塞的线程继续执行，如果没有调用FM_BLOCK_QUEUE_NOTIFY，则被阻塞的线程会始终阻塞*/
+#define FM_BLOCK_QUEUE_START  {NSThread *__fm_block_queue_thread = [NSThread currentThread];__block id __fm_block_queue_obj = nil;[[NSRunLoop currentRunLoop] addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
+
+#define FM_BLOCK_QUEUE_NOTIFY __fm_block_queue_obj = [NSMutableString new];[__fm_block_queue_obj performSelector:@selector(appendString:) onThread:__fm_block_queue_thread withObject:@"" waitUntilDone:NO];
+
+#define FM_BLOCK_QUEUE_END while (!__fm_block_queue_obj) {[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];}}
+
 @interface GCDQueue : NSObject
 
 + (instancetype) mainQueue;/**< 主线程（线性）  */
