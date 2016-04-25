@@ -7,7 +7,7 @@
 //
 
 #import "FMRealTimeBlurryView.h"
-#import "UIImage+FMCategory.h"
+#import "FMExtensions.h"
 
 
 NSUInteger UIEDeviceSystemMajorVersion();
@@ -119,7 +119,7 @@ const CGFloat UIERealTimeBlurViewTintColorAlpha = 0.1;
         //helps w/ our colors when blurring
         //feel free to adjust jpeg quality (lower = higher perf)
         NSData *imageData = UIImageJPEGRepresentation(image, 0.01);
-        image = [[UIImage imageWithData:imageData] fmui_boxblurImageWithBlur:UIERealTimeBlurViewDefaultBlurRadius];
+        image = [[UIImage imageWithData:imageData] fm_blurImageWithBlur:UIERealTimeBlurViewDefaultBlurRadius];
         
         dispatch_sync(dispatch_get_main_queue(), ^{
             //update the layer content

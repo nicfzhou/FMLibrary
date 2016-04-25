@@ -6,10 +6,9 @@
 //
 //
 
-#import "UIView+FMCategory.h"
-#import "NSObject+FMCategory.h"
 #import "FMRealTimeBlurryView.h"
-#import "UIImage+FMCategory.h"
+#import "FMExtensions.h"
+#import "UIView+FMCategory.h"
 
 
 static char *kBlurryViewKey;
@@ -23,10 +22,10 @@ NSString * toKeyString(char *);
 #pragma mark UIImage methods
 - (void) enableBlurry:(BOOL)enable{
     NSString *key = toKeyString(kBlurryViewKey);
-    UIView *blurryView = [self propertyForKey:key];
+    UIView *blurryView = [self fm_propertyForKey:key];
     if (!enable) {
         [blurryView removeFromSuperview];
-        [self setProperty:nil forKey:key];
+        [self fm_setProperty:nil forKey:key];
         return;
     }
     
@@ -41,7 +40,7 @@ NSString * toKeyString(char *);
     blurryView.frame = self.bounds;
     [blurryView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     [self addSubview:blurryView];
-    [self setProperty:blurryView forKey:key];
+    [self fm_setProperty:blurryView forKey:key];
 }
 
 - (UIImage *) snapshotImage{
@@ -53,7 +52,7 @@ NSString * toKeyString(char *);
 }
 
 - (UIImage *) snapshotBlurImage{
-    return [[self snapshotImage] fmui_boxblurImageWithBlur:1];
+    return [[self snapshotImage] fm_blurImageWithBlur:1];
 }
 
 #pragma mark override
