@@ -32,7 +32,10 @@
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
     if (status != kCLAuthorizationStatusNotDetermined) {
-        [self performSelector:@selector(setAskingPermission:) onThread:_targetThread withObject:@(NO) waitUntilDone:NO];
+        [self performSelector:@selector(setAskingPermissionWithNumber:)
+                     onThread:_targetThread
+                   withObject:[NSNumber numberWithBool:NO]
+                waitUntilDone:NO];
     }
 }
 
@@ -40,6 +43,9 @@
     NSLog(@"update location");
 }
 
+- (void) setAskingPermissionWithNumber:(NSNumber *)askingPermission{
+    _askingPermission = askingPermission.boolValue;
+}
 @end
 
 @implementation FMPermission
