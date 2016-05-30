@@ -295,11 +295,11 @@ typedef enum {
                 }
                 
             }
-            if(chinese.length>=2){
-                return [chinese substringFromIndex:chinese.length-2];
+            if(chinese.length>0){
+                return [chinese substringFromIndex:MAX(0, (NSInteger)chinese.length-2)];
             }
-            if (english.length>=5) {
-                return [english substringFromIndex:english.length-5];
+            if (english.length>0) {
+                return [english substringFromIndex:MAX(0,(NSInteger)english.length-5)];
             }
         }
             break;
