@@ -12,6 +12,5 @@
 
 + (void) makeToast:(NSString *) toast;
 + (void) makeToast:(NSString *)toast duration:(NSTimeInterval) duration;
-+ (void) makeToast:(NSString *)toast duration:(NSTimeInterval)duration onView:(UIView *) view;
 
 @end

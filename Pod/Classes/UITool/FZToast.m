@@ -8,18 +8,22 @@
 
 #import "FZToast.h"
 
-@implementation FZToast
+static NSMutableArray *toastWindowArray;
+@implementation FZToast{
+    NSString *_text;
+    NSTimeInterval *_duration;
+}
 
++ (void)initialize{
+    toastWindowArray = [NSMutableArray array];
+}
 + (void) makeToast:(NSString *) toast{
     [self makeToast:toast duration:2];
 }
 + (void) makeToast:(NSString *)toast duration:(NSTimeInterval) duration{
-    [self makeToast:toast duration:duration onView:nil];
-}
-+ (void) makeToast:(NSString *)toast duration:(NSTimeInterval)duration onView:(UIView *) view{
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIView *targetView = view?:[UIApplication sharedApplication].keyWindow;
+        
         
         NSDictionary *attr = @{NSFontAttributeName:[UIFont systemFontOfSize:16],
                                NSForegroundColorAttributeName:[UIColor whiteColor]};
@@ -36,18 +40,23 @@
         label.layer.masksToBounds = YES;
         label.layer.opacity       = 0.;
         
-        CGSize size = [label sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width*.8, 50)];
+        CGRect screenRect = [UIScreen mainScreen].bounds;
+        CGSize size = [label sizeThatFits:CGSizeMake(screenRect.size.width*.8, 50)];
         size.width += 30;
         size.height += 10;
+        label.frame = CGRectMake(0, 0, size.width, size.height);
+        CGRect windowFrame = CGRectMake((screenRect.size.width-size.width)*.5,
+                                       (screenRect.size.height - size.height - 30),
+                                       size.width,
+                                       size.height);
         
-        [targetView addSubview:label];
-        [targetView addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:targetView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
         
-        [targetView addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:targetView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-30]];
-        
-        [label addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:size.width]];
-        
-        [label addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:size.height]];
+        UIWindow *window = [[UIWindow alloc] initWithFrame:windowFrame];
+        window.windowLevel = UIWindowLevelAlert;
+        window.backgroundColor = [UIColor clearColor];
+        window.hidden = NO;
+        [window addSubview:label];
+        [toastWindowArray addObject:window];
         
         [UIView animateWithDuration:0.25 animations:^{
             label.layer.opacity = 1.;
@@ -61,9 +70,6 @@
             [self hideView:label];
         });
     });
-    
-    
-    
 }
 
 + (void) handleTap:(UITapGestureRecognizer*) gr{
@@ -74,7 +80,9 @@
     [UIView animateWithDuration:.25 animations:^{
         view.layer.opacity = .0;
     } completion:^(BOOL finish){
+        UIWindow *window = view.superview;
         [view removeFromSuperview];
+        [toastWindowArray removeObject:window];
     }];
 }
 
