@@ -67,7 +67,7 @@
  * 如果阻塞主线程，则需要在子线程中调用notify/notifyAll,否则会产生死锁
  */
 - (void)waitNow;
-- (void)waitForTimeinterval:(NSTimeInterval) interval;
+- (BOOL)waitForTimeinterval:(NSTimeInterval) interval;
 /** 唤醒子线程中暂停的任务，可以在任意线程中调用;如果有多个子线程中调用了wait，则会随机竞争唤醒某个线程 */
 - (void)notify;
 /** 唤醒所有暂停的子线程 */

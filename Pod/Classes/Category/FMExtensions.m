@@ -440,7 +440,8 @@ typedef enum {
     }
 }
 
-- (void)waitForTimeinterval:(NSTimeInterval) interval{
+- (BOOL)waitForTimeinterval:(NSTimeInterval) interval{
+    BOOL timeOut = NO;
     NSThread *currentThread = [NSThread currentThread];
     @synchronized (self) {
         NSMutableArray *threads = self.fmThreads;
@@ -450,11 +451,13 @@ typedef enum {
     int count = 0;
     while ([self.fmThreads containsObject:currentThread]) {
         if (count>0) {//如果被notify，则不会继续进入循环；如果是超时，则会进入循环，在此处进行排除
+            timeOut = YES;
             break;
         }
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:interval]];
         count++;
     }
+    return timeOut;
 }
 
 - (void)notify{
