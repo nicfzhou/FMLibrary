@@ -61,7 +61,8 @@ static char *overlayKey;
             [view addConstraint:[NSLayoutConstraint constraintWithItem:overlay attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeLeft multiplier:1 constant:0]];
             [view addConstraint:[NSLayoutConstraint constraintWithItem:overlay attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
             [view addConstraint:[NSLayoutConstraint constraintWithItem:overlay attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeRight multiplier:1 constant:0]];
-            
+            [view layoutIfNeeded];
+            [overlay sizeToFit];
             [self setOverlay:overlay];
         }
         [UIView animateWithDuration:animate?.2:.0 animations:^{
