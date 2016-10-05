@@ -430,11 +430,7 @@ typedef enum {
 
 
 - (void)waitNow{
-    NSThread *currentThread = [NSThread currentThread];
-    @synchronized (self) {
-        NSMutableArray *threads = self.fmThreads;
-        [threads addObject:currentThread];
-    }
+    NSThread *currentThread = [self fm_currentThread];
     [[NSRunLoop currentRunLoop] addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
     while ([self.fmThreads containsObject:currentThread]) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
@@ -443,11 +439,7 @@ typedef enum {
 
 - (BOOL)waitForTimeinterval:(NSTimeInterval) interval{
     BOOL timeOut = NO;
-    NSThread *currentThread = [NSThread currentThread];
-    @synchronized (self) {
-        NSMutableArray *threads = self.fmThreads;
-        [threads addObject:currentThread];
-    }
+    NSThread *currentThread = [self fm_currentThread];
     [[NSRunLoop currentRunLoop] addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
     int count = 0;
     while ([self.fmThreads containsObject:currentThread]) {
@@ -486,26 +478,33 @@ typedef enum {
 
 #pragma private
 static char *kFMThreadsKey;
+- (NSThread *)fm_currentThread{
+    NSThread *thread = [NSThread currentThread];
+    @synchronized (self) {
+        if (!self.fmThreads) {
+            [self setFmThreads:[NSMutableArray array]];
+        }
+        [[self fmThreads] addObject:thread];
+    }
+    return thread;
+}
+
+- (void)setFmThreads:(NSMutableArray *)threads{
+    objc_setAssociatedObject(self, &kFMThreadsKey, threads, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (NSMutableArray *)fmThreads{
     NSMutableArray *threads = objc_getAssociatedObject(self, &kFMThreadsKey);
-    if (!threads) {
-        @synchronized (self) {
-            threads = objc_getAssociatedObject(self, &kFMThreadsKey);
-            if (!threads) {
-                threads = [NSMutableArray array];
-                objc_setAssociatedObject(self, &kFMThreadsKey, threads, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-            }
-        }
-    }
     return threads;
 }
 
 - (void)fmRemoveWaitingThread:(NSThread *)thread{
     NSMutableArray *threads = self.fmThreads;
-    @synchronized(threads){
+    @synchronized(self){
         [threads removeObject:thread];
     }
 }
+
 
 @end
 
