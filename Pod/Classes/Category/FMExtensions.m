@@ -431,25 +431,31 @@ typedef enum {
 
 - (void)waitNow{
     NSThread *currentThread = [self fm_currentThread];
-    [[NSRunLoop currentRunLoop] addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
+    NSMachPort *port = [NSMachPort port];
+    NSRunLoop *runloop = [NSRunLoop currentRunLoop];
+    [runloop addPort:port forMode:NSDefaultRunLoopMode];
     while ([self.fmThreads containsObject:currentThread]) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+        [runloop runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
+    [runloop removePort:port forMode:NSDefaultRunLoopMode];
 }
 
 - (BOOL)waitForTimeinterval:(NSTimeInterval) interval{
     BOOL timeOut = NO;
     NSThread *currentThread = [self fm_currentThread];
-    [[NSRunLoop currentRunLoop] addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
+    NSMachPort *port = [NSMachPort port];
+    NSRunLoop *runloop = [NSRunLoop currentRunLoop];
+    [runloop addPort:port forMode:NSDefaultRunLoopMode];
     int count = 0;
     while ([self.fmThreads containsObject:currentThread]) {
         if (count>0) {//如果被notify，则不会继续进入循环；如果是超时，则会进入循环，在此处进行排除
             timeOut = YES;
             break;
         }
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:interval]];
+        [runloop runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:interval]];
         count++;
     }
+    [runloop removePort:port forMode:NSDefaultRunLoopMode];
     return timeOut;
 }
 
