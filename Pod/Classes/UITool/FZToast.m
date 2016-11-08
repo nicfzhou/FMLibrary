@@ -16,6 +16,7 @@ typedef NS_ENUM(NSUInteger,FZToastPostion) {
 
 
 static NSMutableArray *toastWindowArray;
+static CGFloat keyboardHeight;
 @implementation FZToast{
     NSString *_text;
     NSTimeInterval _duration;
@@ -24,7 +25,20 @@ static NSMutableArray *toastWindowArray;
 }
 
 + (void)initialize{
-    toastWindowArray = [NSMutableArray array];
+    if(self == [FZToast self]){
+        toastWindowArray = [NSMutableArray array];
+        
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillShowNotification object:nil queue:nil usingBlock:^(NSNotification *nt){
+            keyboardHeight = [((NSValue *)nt.userInfo[UIKeyboardFrameEndUserInfoKey]) CGRectValue].size.height;
+        }];
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillHideNotification object:nil queue:nil usingBlock:^(NSNotification *nt){
+            keyboardHeight = 0;
+        }];
+        
+    }
+    
 }
 
 #pragma mark convenient
@@ -114,11 +128,11 @@ static NSMutableArray *toastWindowArray;
         CGFloat centerY = 0.f;
         switch (_postion) {
             case Center: {
-                centerY = screenRect.size.height*.5 + _offset;
+                centerY = (screenRect.size.height - keyboardHeight) *.5 + _offset;
                 break;
             }
             case Bottom: {
-                centerY = screenRect.size.height - 44 - windowFrame.size.height*.5 + _offset;
+                centerY = (screenRect.size.height - keyboardHeight) - 44 - windowFrame.size.height*.5 + _offset;
                 break;
             }
             case Top: {
